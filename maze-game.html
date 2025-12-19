@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>미로 탈출 게임</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #maze-container {
+            display: grid;
+            gap: 2px;
+            background-color: #ccc;
+            padding: 2px;
+            border: 3px solid #333;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wall {
+            background-color: #000;
+        }
+
+        .path {
+            background-color: #fff;
+        }
+
+        .player {
+            background-color: #2196F3;
+            border-radius: 50%;
+        }
+
+        .exit {
+            background-color: #4CAF50;
+        }
+
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>미로 탈출 게임</h1>
+    <div id="maze-container"></div>
+    <div class="instructions">
+        <p>방향키 또는 WASD로 이동하세요!</p>
+        <p>초록색 출구를 찾아 탈출하세요!</p>
+    </div>
+
+    <script>
+        // 미로 맵 (0: 길, 1: 벽, 2: 출구)
+        const maze = [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+            [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+            [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+            [1, 0, 1, 1, 1, 1, 0, 1, 0, 1],
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+            [1, 1, 1, 0, 0, 1, 1, 1, 0, 1],
+            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+            [1, 0, 1, 0, 0, 0, 1, 1, 2, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        ];
+
+        // 플레이어 시작 위치
+        let playerX = 1;
+        let playerY = 1;
+
+        // 미로 컨테이너 요소 가져오기
+        const mazeContainer = document.getElementById('maze-container');
+
+        /**
+         * 미로를 화면에 그리는 함수
+         * CSS Grid를 사용하여 2차원 배열을 시각적으로 표현
+         */
+        function renderMaze() {
+            // 기존 내용 지우기
+            mazeContainer.innerHTML = '';
+            
+            // Grid 열 개수 설정
+            mazeContainer.style.gridTemplateColumns = `repeat(${maze[0].length}, 40px)`;
+            
+            // 미로의 각 행을 순회
+            for (let y = 0; y < maze.length; y++) {
+                // 각 열을 순회
+                for (let x = 0; x < maze[y].length; x++) {
+                    // 셀(칸) div 요소 생성
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    
+                    // 현재 위치가 플레이어 위치인지 확인
+                    if (x === playerX && y === playerY) {
+                        cell.classList.add('player');
+                    } 
+                    // 벽인 경우
+                    else if (maze[y][x] === 1) {
+                        cell.classList.add('wall');
+                    } 
+                    // 출구인 경우
+                    else if (maze[y][x] === 2) {
+                        cell.classList.add('exit');
+                    } 
+                    // 길인 경우
+                    else {
+                        cell.classList.add('path');
+                    }
+                    
+                    // 생성한 셀을 컨테이너에 추가
+                    mazeContainer.appendChild(cell);
+                }
+            }
+        }
+
+        /**
+         * 플레이어를 이동시키는 함수
+         * @param {number} dx - x축 이동량 (왼쪽: -1, 오른쪽: 1, 이동 없음: 0)
+         * @param {number} dy - y축 이동량 (위: -1, 아래: 1, 이동 없음: 0)
+         */
+        function movePlayer(dx, dy) {
+            // 새로운 위치 계산
+            const newX = playerX + dx;
+            const newY = playerY + dy;
+            
+            // 미로 범위를 벗어나는지 확인
+            if (newY < 0 || newY >= maze.length || newX < 0 || newX >= maze[0].length) {
+                return; // 범위를 벗어나면 이동하지 않음
+            }
+            
+            // 새 위치의 값 확인
+            const targetCell = maze[newY][newX];
+            
+            // 벽이면 이동할 수 없음
+            if (targetCell === 1) {
+                return;
+            }
+            
+            // 출구에 도착한 경우
+            if (targetCell === 2) {
+                playerX = newX;
+                playerY = newY;
+                renderMaze(); // 마지막 이동 표시
+                alert('탈출 성공!');
+                // 게임 재시작
+                playerX = 1;
+                playerY = 1;
+            } 
+            // 길인 경우 이동
+            else {
+                playerX = newX;
+                playerY = newY;
+            }
+            
+            // 화면 다시 그리기
+            renderMaze();
+        }
+
+        /**
+         * 키보드 입력을 처리하는 함수
+         * @param {KeyboardEvent} event - 키보드 이벤트 객체
+         */
+        function handleKeyPress(event) {
+            // event.key로 어떤 키가 눌렸는지 확인
+            switch(event.key) {
+                // 위로 이동 (방향키 위, W)
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    movePlayer(0, -1);
+                    event.preventDefault(); // 화면 스크롤 방지
+                    break;
+                
+                // 아래로 이동 (방향키 아래, S)
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    movePlayer(0, 1);
+                    event.preventDefault();
+                    break;
+                
+                // 왼쪽으로 이동 (방향키 왼쪽, A)
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    movePlayer(-1, 0);
+                    event.preventDefault();
+                    break;
+                
+                // 오른쪽으로 이동 (방향키 오른쪽, D)
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    movePlayer(1, 0);
+                    event.preventDefault();
+                    break;
+            }
+        }
+
+        // 키보드 이벤트 리스너 등록
+        // 사용자가 키를 누를 때마다 handleKeyPress 함수가 실행됨
+        document.addEventListener('keydown', handleKeyPress);
+
+        // 페이지가 로드되면 미로를 처음 그리기
+        renderMaze();
+    </script>
+</body>
+</html>
