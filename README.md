@@ -1,30 +1,35 @@
-# Maze escape game
+# 📚 미로 탈출 게임
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+## 프로젝트 소개
+웹 브라우저에서 플레이할 수 있는 미로 탈출 게임입니다.  
+사용자는 미로를 탐색하며 출구를 찾아 탈출하는 것을 목표로 하며,  
+v0.app을 활용해 빠르게 UI와 게임 구조를 구현하였습니다.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/rlaehddnrs-projects/v0-maze-escape-game)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/rsXoYKHDlQA)
+## 개발 기간
+2024.11 ~ 2024.12 (2개월)
 
-## Overview
+## 주요 기능
+- 키보드 조작을 통한 캐릭터 이동
+- 미로 구조 기반 경로 탐색
+- 목표 지점 도달 시 게임 클리어
+- 웹 환경에서 즉시 실행 가능한 게임 플레이
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## 사용 기술
+- Frontend: React, TypeScript
+- UI Framework: Tailwind CSS
+- Tool: v0.app
+- Deployment: Vercel
 
-## Deployment
+## 실행 방법
+```bash
+# 저장소 클론
+git clone <YOUR_GIT_URL>
 
-Your project is live at:
+# 프로젝트 폴더 이동
+cd <YOUR_PROJECT_NAME>
 
-**[https://vercel.com/rlaehddnrs-projects/v0-maze-escape-game](https://vercel.com/rlaehddnrs-projects/v0-maze-escape-game)**
+# 패키지 설치
+npm install
 
-## Build your app
-
-Continue building your app on:
-
-**[https://v0.app/chat/rsXoYKHDlQA](https://v0.app/chat/rsXoYKHDlQA)**
-
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+# 개발 서버 실행
+npm run dev
